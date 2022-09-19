@@ -1,0 +1,100 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<form action="" method="post" style="display:inline-block">
+    <button class="btn" name="showall"  type="submit"> Show All</button>
+</form>
+<form action="" method="post">
+    <label for="Coll">Колонка</label>
+    <select name="coll">
+        <option value="date">Дата</option>
+        <option value="name">Название</option>
+        <option value="amount">Количество</option>
+        <option value="distance">Расстояние</option>
+    </select>
+    <label for="Coll">Условие</label>
+    <select name="condition">
+        <option value="=">Равно</option>
+        <option value="contain">Содержит</option>
+        <option value=">">Больше</option>
+        <option value="<">Меньше</option>
+    </select>
+	<p>
+	    <label for="Value">Значение</label>
+	    <input type="text" name="value">
+	</p>
+	<p>
+	    <input type="submit">
+	</p>
+</form>
+<div class="content">
+    <h2>(Page {{ pagination.page }})</h2>
+    <div class="row">
+        <div class="col-md-6 col-sm-12 col-xs-12">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h3>{% block title %} Table data {% endblock %}</h3>
+                </div>
+                <div class="panel-body">
+                    <div class="table-responsive">
+                        <table class="table table-striped table-bordered table-hover">
+                            <thead>
+                                <tr>
+                                  <th>ID</th>
+                                  <th>Дата</th>
+                                  <th>Название</th>
+                                  <th>Количество</th>
+                                  <th>Расстояние</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                            {% for data_ in pagination.items %}
+                                <tr>
+                                    <td>{{ data_.id }}</td>
+                                    <td>{{ data_.date }}</td>
+                                    <td>{{ data_.name }}</td>
+                                    <td>{{ data_.amount }}</td>
+                                    <td>{{ data_.distance }}</td>
+                                </tr>
+
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="pagination">
+    {% if pagination.has_prev %}
+        <span>
+            <a class='page-number' href="{{ url_for('index', page=pagination.prev_num) }}">
+                {{ '<<<' }}
+            </a>
+        </span>
+    {% endif %}
+
+    {% for number in pagination.iter_pages() %}
+        {% if pagination.page != number %}
+            <span>
+                    <a class='page-number'
+                        href="{{ url_for('index', page=number) }}">
+                    {{ number }}
+                    </a>
+            </span>
+        {% else %}
+            <span class='current-page-number'>{{ number }}</span>
+        {% endif %}
+    {% endfor %}
+
+    {% if pagination.has_next %}
+        <span>
+            <a class='page-number'
+                href="{{ url_for('index', page=pagination.next_num) }}">
+                {{ '>>>' }}
+            </a>
+        </span>
+    {% endif %}
+</div>
+{% endblock %}
